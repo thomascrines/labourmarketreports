@@ -1,12 +1,12 @@
 Package: labourmarketreports
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Fetch data from APIs and generate markdown reports
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
+Authors@R: c(person("Thomas", "Crines", email = "Thomas.Crines@gov.scot", role = c("aut", "cre")), 
+    person("Luke", "Main", email = "Luke.Main@gov.scot", role = "aut"))
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Depends:
