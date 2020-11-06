@@ -1,0 +1,585 @@
+---
+output:
+  html_document: default
+---
+
+```{css, echo=FALSE}
+* {
+  font-family: Arial !important;
+}
+
+.column2 {
+  float: left;
+  width: 50%;
+}
+
+.column3 {
+  float: left;
+  width: 33.33%;
+}
+
+.column2a {
+  float: left;
+  width: 80%;
+}
+
+.column2b {
+  float: left;
+  width: 20%;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.titledate {
+  background-color:#81358D;
+  color:#FFFFFF;
+}
+
+.titledate:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+```
+
+```{r, include = F}
+library(readxl)       # Uses the function read_excel
+library(data.table)   # Uses the functions data.table & dcast
+library(flextable)    # Uses the function flextable
+library(stringr)      # Uses the funtion str_sub
+library(plyr)         # Uses the function count
+library(lubridate)    # Uses the functions month & year
+library(officer)      # Uses function fp_border
+library(ggplot2)      # Uses the function ggplot
+
+Date <- as.Date(data.table(read_excel("Tables_Online.xlsx", sheet = "Date"))$Value, format = "%d/%m/%Y")
+Key_Stats <- data.table(read_excel("Tables_Online.xlsx", sheet = "Key"))
+Country_Stats <- data.table(read_excel("Tables_Online.xlsx", sheet = "Countries"))
+Region_Stats <- data.table(read_excel("Tables_Online.xlsx", sheet = "Regions"))
+Time_Stats <- data.table(read_excel("Tables_Online.xlsx", sheet = "Time"))
+
+Time_Stats[,Period := as.Date(paste("01", str_sub(Period, 5, 7), str_sub(Period, -4), sep = " "), format = "%d %b %Y")]
+
+TimeN <- paste(month(Date %m-% months(4), label = T, abbr = F), " to ",
+                  month(Date %m-% months(2), label = T, abbr = F), " ",
+                  year(Date %m-% months(2)), sep = "")
+
+TimeQ <- paste(month(Date %m-% months(7), label = T, abbr = F), " to ",
+                  month(Date %m-% months(5), label = T, abbr = F), " ",
+                  year(Date %m-% months(5)), sep = "")
+
+Timeq <- paste(month(Date %m-% months(7), label = T, abbr = T), "-",
+                  month(Date %m-% months(5), label = T, abbr = T), " ",
+                  year(Date %m-% months(5)), sep = "")
+
+Timey <- paste(month(Date %m-% months(4), label = T, abbr = T), "-",
+                  month(Date %m-% months(2), label = T, abbr = T), " ",
+                  year(Date %m-% months(14)), sep = "")
+
+Timed <- paste(month(Date %m-% months(4), label = T, abbr = T), "-",
+                  month(Date %m-% months(2), label = T, abbr = T), " 2008", sep = "")
+
+# A useful function for adding comma to data.
+Commaed <- function(INPUT){
+  OUTPUT <- prettyNum(INPUT, big.mark = ",", scientific = F)
+  return(OUTPUT) 
+}
+```
+<div class = "titledate">
+<div class = "column2a">
+# LABOUR MARKET STATISTICS
+</div>
+<div class = "column2b">
+### `r paste(month(Date, label = T, abbr = F), year(Date), sep = " ")`
+</div>
+</div>
+
+##### **In `r TimeN`, compared to `r TimeQ` (the quarter before):**
+The **employment** rate was `r Key_Stats[Area == "Scotland" & Status == "Employment" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value` per cent, `r if(Key_Stats[Area == "Scotland" & Status == "Employment" & Type == "Rate" & Sex == "People" & Statistic == "Quarter",]$Value > 0){"higher than"}else if(Key_Stats[Area == "Scotland" & Status == "Employment" & Type == "Rate" & Sex == "People" & Statistic == "Quarter",]$Value < 0){"lower than"} else {"the same as"}` the quarter before (`r abs(Key_Stats[Area == "Scotland" & Status == "Employment" & Type == "Rate" & Sex == "People" & Statistic == "Quarter",]$Value)` percentage points) and `r if(Key_Stats[Area == "Scotland" & Status == "Employment" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value > Key_Stats[Area == "United Kingdom" & Status == "Employment" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value){"above"}else if(Key_Stats[Area == "Scotland" & Status == "Employment" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value < Key_Stats[Area == "United Kingdom" & Status == "Employment" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value){"below"} else {"the same as"}` the UK rate of `r Key_Stats[Area == "United Kingdom" & Status == "Employment" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value` per cent. `r Commaed(Key_Stats[Area == "Scotland" & Status == "Employment" & Type == "Level" & Sex == "People" & Statistic == "Estimate",]$Value)` people were in employment, `r Commaed(abs(Key_Stats[Area == "Scotland" & Status == "Employment" & Type == "Level" & Sex == "People" & Statistic == "Quarter",]$Value))` `r if(Key_Stats[Area == "Scotland" & Status == "Employment" & Type == "Level" & Sex == "People" & Statistic == "Quarter",]$Value > 0){"more than"}else if(Key_Stats[Area == "Scotland" & Status == "Employment" & Type == "Level" & Sex == "People" & Statistic == "Quarter",]$Value < 0){"less than"} else {"the same as"}` `r TimeQ`.
+
+The **unemployment** rate was `r Key_Stats[Area == "Scotland" & Status == "Unemployment" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value` per cent, `r if(Key_Stats[Area == "Scotland" & Status == "Unemployment" & Type == "Rate" & Sex == "People" & Statistic == "Quarter",]$Value > 0){"higher than"}else if(Key_Stats[Area == "Scotland" & Status == "Unemployment" & Type == "Rate" & Sex == "People" & Statistic == "Quarter",]$Value < 0){"lower than"} else {"the same as"}` the quarter before (`r abs(Key_Stats[Area == "Scotland" & Status == "Unemployment" & Type == "Rate" & Sex == "People" & Statistic == "Quarter",]$Value)` percentage points) and `r if(Key_Stats[Area == "Scotland" & Status == "Unemployment" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value > Key_Stats[Area == "United Kingdom" & Status == "Unemployment" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value){"above"}else if(Key_Stats[Area == "Scotland" & Status == "Unemployment" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value < Key_Stats[Area == "United Kingdom" & Status == "Unemployment" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value){"below"} else {"the same as"}` the UK rate of `r Key_Stats[Area == "United Kingdom" & Status == "Unemployment" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value` per cent. `r Commaed(Key_Stats[Area == "Scotland" & Status == "Unemployment" & Type == "Level" & Sex == "People" & Statistic == "Estimate",]$Value)` people were unemployed, `r Commaed(abs(Key_Stats[Area == "Scotland" & Status == "Unemployment" & Type == "Level" & Sex == "People" & Statistic == "Quarter",]$Value))` `r if(Key_Stats[Area == "Scotland" & Status == "Unemployment" & Type == "Level" & Sex == "People" & Statistic == "Quarter",]$Value > 0){"more than"}else if(Key_Stats[Area == "Scotland" & Status == "Unemployment" & Type == "Level" & Sex == "People" & Statistic == "Quarter",]$Value < 0){"less than"} else {"the same as"}` `r TimeQ`.
+
+The **inactivity** rate was `r Key_Stats[Area == "Scotland" & Status == "Inactivity" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value` per cent, `r if(Key_Stats[Area == "Scotland" & Status == "Inactivity" & Type == "Rate" & Sex == "People" & Statistic == "Quarter",]$Value > 0){"higher than"}else if(Key_Stats[Area == "Scotland" & Status == "Inactivity" & Type == "Rate" & Sex == "People" & Statistic == "Quarter",]$Value < 0){"lower than"} else {"the same as"}` the quarter before (`r abs(Key_Stats[Area == "Scotland" & Status == "Inactivity" & Type == "Rate" & Sex == "People" & Statistic == "Quarter",]$Value)` percentage points) and `r if(Key_Stats[Area == "Scotland" & Status == "Inactivity" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value > Key_Stats[Area == "United Kingdom" & Status == "Inactivity" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value){"above"}else if(Key_Stats[Area == "Scotland" & Status == "Inactivity" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value < Key_Stats[Area == "United Kingdom" & Status == "Inactivity" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value){"below"} else {"the same as"}` the UK rate of `r Key_Stats[Area == "United Kingdom" & Status == "Inactivity" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value` per cent. `r Commaed(Key_Stats[Area == "Scotland" & Status == "Inactivity" & Type == "Level" & Sex == "People" & Statistic == "Estimate",]$Value)` people were in economically inactive, `r Commaed(abs(Key_Stats[Area == "Scotland" & Status == "Inactivity" & Type == "Level" & Sex == "People" & Statistic == "Quarter",]$Value))` `r if(Key_Stats[Area == "Scotland" & Status == "Inactivity" & Type == "Level" & Sex == "People" & Statistic == "Quarter",]$Value > 0){"more than"}else if(Key_Stats[Area == "Scotland" & Status == "Inactivity" & Type == "Level" & Sex == "People" & Statistic == "Quarter",]$Value < 0){"less than"} else {"the same as"}` `r TimeQ`.
+
+##### **Over the quarter**
+From `r TimeQ`, the unemployment rate `r if(Key_Stats[Area == "Scotland" & Status == "Unemployment" & Type == "Rate" & Sex == "People" & Statistic == "Quarter",]$Value > 0){"increased to"}else if(Key_Stats[Area == "Scotland" & Status == "Unemployment" & Type == "Rate" & Sex == "People" & Statistic == "Quarter",]$Value < 0){"decreased to"} else {"remained the same at"}` `r Key_Stats[Area == "Scotland" & Status == "Unemployment" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value` per cent, the employment rate `r if(Key_Stats[Area == "Scotland" & Status == "Employment" & Type == "Rate" & Sex == "People" & Statistic == "Quarter",]$Value > 0){"increased to"}else if(Key_Stats[Area == "Scotland" & Status == "Employment" & Type == "Rate" & Sex == "People" & Statistic == "Quarter",]$Value < 0){"decreased to"} else {"remained the same at"}` `r Key_Stats[Area == "Scotland" & Status == "Employment" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value` per cent, and the inactivity rate  `r if(Key_Stats[Area == "Scotland" & Status == "Inactivity" & Type == "Rate" & Sex == "People" & Statistic == "Quarter",]$Value > 0){"increased to"}else if(Key_Stats[Area == "Scotland" & Status == "Inactivity" & Type == "Rate" & Sex == "People" & Statistic == "Quarter",]$Value < 0){"decreased to"} else {"remained the same at"}` `r Key_Stats[Area == "Scotland" & Status == "Inactivity" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value` per cent.
+
+##### **Over the year**
+The unemployment rate `r if(Key_Stats[Area == "Scotland" & Status == "Unemployment" & Type == "Rate" & Sex == "People" & Statistic == "Year",]$Value > 0){"increased"}else if(Key_Stats[Area == "Scotland" & Status == "Unemployment" & Type == "Rate" & Sex == "People" & Statistic == "Year",]$Value < 0){"decreased"} else {"remained the same "}`, the employment rate `r if(Key_Stats[Area == "Scotland" & Status == "Employment" & Type == "Rate" & Sex == "People" & Statistic == "Year",]$Value > 0){"increased"}else if(Key_Stats[Area == "Scotland" & Status == "Employment" & Type == "Rate" & Sex == "People" & Statistic == "Year",]$Value < 0){"decreased"} else {"remained the same"}`, and the inactivity rate  `r if(Key_Stats[Area == "Scotland" & Status == "Inactivity" & Type == "Rate" & Sex == "People" & Statistic == "Year",]$Value > 0){"increased"}else if(Key_Stats[Area == "Scotland" & Status == "Inactivity" & Type == "Rate" & Sex == "People" & Statistic == "Year",]$Value < 0){"decreased"} else {"remained the same"}`.
+
+##### **Compared with the UK**
+Scotland’s unemployment rate was `r if(Key_Stats[Area == "Scotland" & Status == "Unemployment" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value > Key_Stats[Area == "United Kingdom" & Status == "Unemployment" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value){"higher"}else if(Key_Stats[Area == "Scotland" & Status == "Unemployment" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value < Key_Stats[Area == "United Kingdom" & Status == "Unemployment" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value){"lower"} else {"the same"}`, the employment rate was `r if(Key_Stats[Area == "Scotland" & Status == "Employment" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value > Key_Stats[Area == "United Kingdom" & Status == "Employment" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value){"higher"}else if(Key_Stats[Area == "Scotland" & Status == "Employment" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value < Key_Stats[Area == "United Kingdom" & Status == "Employment" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value){"lower"} else {"the same"}` and the inactivity rate was `r if(Key_Stats[Area == "Scotland" & Status == "Inactivity" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value > Key_Stats[Area == "United Kingdom" & Status == "Inactivity" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value){"higher"}else if(Key_Stats[Area == "Scotland" & Status == "Inactivity" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value < Key_Stats[Area == "United Kingdom" & Status == "Inactivity" & Type == "Rate" & Sex == "People" & Statistic == "Estimate",]$Value){"lower"} else {"the same"}`.
+
+##### **Labour market statistics Scotland and UK, May to July 2020**
+<div class = "row">
+<div class = "column2a">
+```{r, echo = F}
+X <- data.table(dcast(Key_Stats[Sex == "People"], Status+Area~Type+Statistic, value.var = "Value"))
+
+X[,Level_Estimate := Commaed(Level_Estimate/1000)]
+X[,Level_Quarter := Commaed(Level_Quarter/1000)]
+X[,Level_Year := Commaed(Level_Year/1000)]
+
+BE <- data.table(Status = "", Area = "Employment",
+                 Rate_Estimate = "", Rate_Quarter = "", Rate_Year = "",
+                  Level_Estimate = "", Level_Quarter = "", Level_Year = "")
+BU <- data.table(Status = "", Area = "Unemployment",
+                 Rate_Estimate = "", Rate_Quarter = "", Rate_Year = "",
+                  Level_Estimate = "", Level_Quarter = "", Level_Year = "")
+BI <- data.table(Status = "", Area = "Inactivity",
+                 Rate_Estimate = "", Rate_Quarter = "", Rate_Year = "",
+                  Level_Estimate = "", Level_Quarter = "", Level_Year = "")
+
+X <- rbind(BE, X[Status == "Employment",], BU, X[Status == "Unemployment",], BI, X[Status == "Inactivity",])
+X <- X[, Status := NULL]
+
+Y <- flextable(X,
+               col_keys = c("Area",
+                            "Rate_Estimate", "Rate_Quarter", "Rate_Year", "Col2",
+                            "Level_Estimate", "Level_Quarter", "Level_Year"))
+
+Y <- autofit(Y)
+Y <- colformat_num(Y, j = c("Rate_Estimate", "Rate_Quarter", "Rate_Year"), digits = 1)
+Y <- colformat_num(Y,
+                   j = c("Level_Estimate", "Level_Quarter", "Level_Year"),
+                   big.mark = ",",
+                   digits = 0)
+Y <- empty_blanks(Y)
+Y <- set_header_labels(Y,
+                       Area = "", 
+                       Rate_Estimate = "Rate",
+                       Rate_Quarter = "Change on quarter",
+                       Rate_Year = "Change on year",
+                       Level_Estimate = "Level",
+                       Level_Quarter = "Change on quarter",
+                       Level_Year = "Change on year")
+
+Y <- add_header_row(Y, top = T,
+                    values = c("", "Percentage Point", "", "Level (thousands)"),
+                    colwidths = c(1, 3, 1, 3))
+Y <- add_header_row(Y, top = F,
+                    values = c("", "(per cent)", Timeq, Timey, "", "(thousands)", Timeq, Timey),
+                    colwidths = c(1, 1, 1, 1, 1, 1, 1, 1))
+
+
+Y <- hline_top(Y, j = c(1, 2:4, 6:8), border = fp_border(color = "#81358D", width = 2), part = "all")
+Y <- hline(Y, i = 1, j = c(1, 2:4, 6:8), border = fp_border(color = "#81358D", width = 2), part = "header")
+Y <- hline(Y, i = 2, border = fp_border(color = "#FFFFFF", width = 0), part = "header")
+Y <- hline(Y, border = fp_border(color = "#FFFFFF", width = 0), part = "body")
+Y <- hline_bottom(Y, j = c(1, 2:4, 6:8), border = fp_border(color = "#81358D", width = 2), part = "all")
+
+Y <- bg(Y,
+        ~ Area %in% c("Employment", "Unemployment", "Inactivity", "Scotland"),
+        j = c(1, 2:4, 6:8),
+        bg = "#EBE6E6",
+        part = "body")
+Y <- bold(Y, part = "header")
+Y <- bold(Y, ~ Area %in% c("Employment", "Unemployment", "Inactivity"))
+Y <- align(Y, i = 1, align = "center", part = "header")
+Y <- align(Y, i = 3, align = "right", part = "header")
+Y <- align(Y, j = "Area", align = "left", part = "all")
+
+Y <- compose(Y, i = 1, j = 1, part = "body",
+             value = as_paragraph("Employment",
+                                  as_chunk("1", props = fp_text(vertical.align = "superscript"))))
+Y <- compose(Y, i = 4, j = 1, part = "body",
+             value = as_paragraph("Unemployment",
+                                  as_chunk("2", props = fp_text(vertical.align = "superscript"))))
+Y <- compose(Y, i = 7, j = 1, part = "body",
+             value = as_paragraph("Inactivity",
+                                  as_chunk("3", props = fp_text(vertical.align = "superscript"))))
+
+Y
+```
+</div>
+
+<div class = "column2b">
+<font size = "1">
+**Source:** Labour Force Survey, seasonally adjusted
+
+Rates and change over time based on unrounded data.
+
+Level:  
+1,2: All persons aged 16+;  
+3: All persons aged 16-64.
+
+Denominator:  
+1,3: all persons 16-64 years;  
+2: economically active 16+.
+</font>
+</div>
+</div>
+
+<div class = "row">
+<div class = "column3">
+
+##### **Employment Rate**
+```{r, echo = F}
+ggplot(Time_Stats[Status == "Employment"], aes(Period, Value, colour = Area)) +
+  geom_line(aes(linetype = Area), size = 1) +
+  scale_colour_manual(values = c("#81358D", "#7030A0")) +
+  scale_linetype_manual(values = c("solid", "dashed")) +
+  scale_x_date(
+    name = "",
+    date_breaks = "1 year",
+    date_labels = "%Y") +
+  scale_y_continuous(
+    name = "Employment Rate (per cent)",
+    limits = c(69, 79),
+    breaks = seq(69, 79, 2)) +
+  theme_bw() +
+  theme(
+    legend.title = element_blank(),
+    legend.position = c(0.2, 0.8),
+    legend.text = element_text(size = 14),
+    panel.border = element_blank(),
+    plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
+    axis.line = element_line(colour = "black"),
+    axis.text = element_text(size = 16),
+    axis.text.x = element_text(vjust = 0.5, angle = 45),
+    axis.title = element_text(size = 18, face = "bold"),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank())
+```
+</div>
+  
+<div class = "column3">
+##### **Unemployment Rate**
+```{r, echo = F}
+ggplot(Time_Stats[Status == "Unemployment"], aes(Period, Value, colour = Area))+
+  geom_line(aes(linetype = Area), size = 1) +
+  scale_colour_manual(values = c("#81358D", "#7030A0")) +
+  scale_linetype_manual(values = c("solid", "dashed")) +
+  scale_x_date(
+    name = "",
+    date_breaks = "1 year",
+    date_labels = "%Y") +
+  scale_y_continuous(
+    name = "Unemployment Rate (per cent)",
+    limits = c(0, 10),
+    breaks = seq(0, 10, 2)) +
+  theme_bw() +
+  theme(
+    legend.title = element_blank(),
+    legend.position = c(0.8, 0.8),
+    legend.text = element_text(size = 14),
+    panel.border = element_blank(),
+    plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
+    axis.line = element_line(colour = "black"),
+    axis.text = element_text(size = 16),
+    axis.text.x = element_text(vjust = 0.5, angle = 45),
+    axis.title = element_text(size = 18, face = "bold"),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank())
+```
+</div>
+  
+<div class = "column3">
+##### **Inactivity Rate**
+```{r, echo = F}
+ggplot(Time_Stats[Status == "Inactivity"], aes(Period, Value, colour = Area)) +
+  geom_line(aes(linetype = Area), size = 1) +
+  scale_colour_manual(values = c("#81358D", "#7030A0")) +
+  scale_linetype_manual(values = c("solid", "dashed")) +
+    scale_x_date(
+      name = "",
+    date_breaks = "1 year",
+    date_labels = "%Y") +
+  scale_y_continuous(
+    name = "Inactivity Rate (per cent)",
+    limits = c(19, 25),
+    breaks = seq(19, 25, 1)) +
+  theme_bw() +
+  theme(
+    legend.title = element_blank(),
+    legend.position = c(0.2, 0.2),
+    legend.text = element_text(size = 14),
+    panel.border = element_blank(),
+    plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
+    axis.line = element_line(colour = "black"),
+    axis.text = element_text(size = 16),
+    axis.text.x = element_text(vjust = 0.5, angle = 45),
+    axis.title = element_text(size = 18, face = "bold"),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank())
+```
+</div>
+</div>
+
+<div class = "row">
+<div class = "column2">
+##### **Country/Region Comparisons**
+```{r, include = F}
+CU <- Country_Stats[Status == "Unemployment" & Area != "United Kingdom",]
+CU[, Rank := rank(CU$Value)]
+
+CE <- Country_Stats[Status == "Employment" & Area != "United Kingdom",]
+CE[, Rank := rank(CE$Value)]
+
+CI <- Country_Stats[Status == "Inactivity" & Area != "United Kingdom",]
+CI[, Rank := rank(CI$Value)]
+
+RU <- Region_Stats[Status == "Unemployment" & Area != "United Kingdom",]
+RU[, Rank := rank(RU$Value)]
+
+RE <- Region_Stats[Status == "Employment" & Area != "United Kingdom",]
+RE[, Rank := rank(RE$Value)]
+
+RI <- Region_Stats[Status == "Inactivity" & Area != "United Kingdom",]
+RI[, Rank := rank(RI$Value)]
+```
+Out of the 4 UK nations, Scotland has the `r if(data.table(count(CU, "Rank"))[Rank == CU[Area == "Scotland",]$Rank, ]$freq != 1){"joint"}` `r if(floor(CU[Area == "Scotland",]$Rank) == 4){"highest"} else if (floor(CU[Area == "Scotland",]$Rank) == 3){"2nd highest"} else if (floor(CU[Area == "Scotland",]$Rank) == 2){"2nd lowest"} else if (floor(CU[Area == "Scotland",]$Rank) == 1){"lowest"}` unemployment, the `r if(data.table(count(CE, "Rank"))[Rank == CE[Area == "Scotland",]$Rank, ]$freq != 1){"joint"}` `r if(floor(CE[Area == "Scotland",]$Rank) == 4){"highest"} else if (floor(CE[Area == "Scotland",]$Rank) == 3){"2nd highest"} else if (floor(CE[Area == "Scotland",]$Rank) == 2){"2nd lowest"} else if (floor(CE[Area == "Scotland",]$Rank) == 1){"lowest"}` employment rate, and the `r if(data.table(count(CI, "Rank"))[Rank == CI[Area == "Scotland",]$Rank, ]$freq != 1){"joint"}` `r if(CI[Area == "Scotland",]$Rank == 4){"highest"} else if (CI[Area == "Scotland",]$Rank == 3){"2nd highest"} else if (CI[Area == "Scotland",]$Rank == 2){"2nd lowest"} else if (CI[Area == "Scotland",]$Rank == 1){"lowest"}` inactivity rate.
+
+Out of the 12 regions of the UK, Scotland has the`r if(data.table(count(RU, "Rank"))[Rank == RU[Area == "Scotland",]$Rank, ]$freq != 1){"joint"}` `r if(floor(RU[Area == "Scotland",]$Rank) == 12){"highest"} else if (floor(RU[Area == "Scotland",]$Rank) == 11){"2nd highest"} else if (floor(RU[Area == "Scotland",]$Rank) == 10){"3rd highest"} else if (floor(RU[Area == "Scotland",]$Rank) %in% c(9, 8, 7)){paste(12 - floor(RU[Area == "Scotland",]$Rank), "th highest", sep = "")} else if (floor(RU[Area == "Scotland",]$Rank) %in% c(6, 5, 4)){paste(floor(RU[Area == "Scotland",]$Rank), "th lowest", sep = "")} else if (floor(RU[Area == "Scotland",]$Rank) == 3){"3rd lowest"} else if (floor(RU[Area == "Scotland",]$Rank) == 2){"2nd lowest"} else if (floor(RU[Area == "Scotland",]$Rank) == 1){"lowest"}` unemployment rate, `r if(data.table(count(RE, "Rank"))[Rank == RE[Area == "Scotland",]$Rank, ]$freq != 1){"joint"}` `r if(floor(RE[Area == "Scotland",]$Rank) == 12){"highest"} else if (floor(RE[Area == "Scotland",]$Rank) == 11){"2nd highest"} else if (floor(RE[Area == "Scotland",]$Rank) == 10){"3rd highest"} else if (floor(RE[Area == "Scotland",]$Rank) %in% c(9, 8, 7)){12 - paste(floor(RE[Area == "Scotland",]$Rank), "th highest", sep = "")} else if (floor(RE[Area == "Scotland",]$Rank) %in% c(6, 5, 4)){paste(floor(RE[Area == "Scotland",]$Rank), "th lowest", sep = "")} else if (floor(RE[Area == "Scotland",]$Rank) == 3){"3rd lowest"} else if (floor(RE[Area == "Scotland",]$Rank) == 2){"2nd lowest"} else if (floor(Re[Area == "Scotland",]$Rank) == 1){"lowest"}` employment rate, and the `r if(data.table(count(RI, "Rank"))[Rank == RI[Area == "Scotland",]$Rank, ]$freq != 1){"joint"}` `r if(floor(RI[Area == "Scotland",]$Rank) == 12){"highest"} else if (floor(RI[Area == "Scotland",]$Rank) == 11){"2nd highest"} else if (floor(RI[Area == "Scotland",]$Rank) == 10){"3rd highest"} else if (floor(RI[Area == "Scotland",]$Rank) %in% c(9, 8, 7)){paste(12 - floor(RI[Area == "Scotland",]$Rank), "th highest", sep = "")} else if (floor(RI[Area == "Scotland",]$Rank) %in% c(6, 5, 4)){paste(floor(RI[Area == "Scotland",]$Rank), "th lowest", sep = "")} else if (floor(RI[Area == "Scotland",]$Rank) == 3){"3rd lowest"} else if (floor(RI[Area == "Scotland",]$Rank) == 2){"2nd lowest"} else if (floor(RI[Area == "Scotland",]$Rank) == 1){"lowest"}` inactivity rate.
+</div>
+  
+<div class = "column2">
+```{r, echo = F}
+X <- data.table(dcast(Country_Stats, Area~Status, value.var = "Value"))
+X1 <- setorder(X[Area != "United Kingdom",], -Employment)
+X <- rbind(X1, X[Area == "United Kingdom",])
+
+Y <- flextable(X,
+               col_keys = c("Area", "Col1", "Employment", "Col2", "Unemployment", "Col3", "Inactivity"))
+
+Y <- autofit(Y)
+Y <- colformat_num(Y, j = c("Employment", "Unemployment", "Inactivity"), digits = 1)
+Y <- empty_blanks(Y)
+
+Y <- hline_top(Y, j = c(1, 3, 5, 7), border = fp_border(color = "#81358D", width = 2), part = "header")
+Y <- hline(Y, border = fp_border(color = "#FFFFFF"), part = "body")
+Y <- hline_bottom(Y, j = c(1, 3, 5, 7), border = fp_border(color = "#81358D", width = 2), part = "all")
+
+Y <- bg(Y, ~ Area == "Scotland", bg = "#EBE6E6", part = "body")
+Y <- bold(Y, part = "header")
+Y <- bold(Y, ~ Area %in% c("Scotland", "United Kingdom"), j = 1)
+
+Y <- set_header_labels(Y, Area = "")
+Y
+```
+</div>
+</div>
+
+##### **Women (`r TimeN`)**
+Scotland’s women’s employment rate is `r if(Key_Stats[Area == "Scotland" & Status == "Employment" & Type == "Rate" & Sex == "Female" & Statistic == "Estimate",]$Value > Key_Stats[Area == "United Kingdom" & Status == "Employment" & Type == "Rate" & Sex == "Female" & Statistic == "Estimate",]$Value){"higher"}else if(Key_Stats[Area == "Scotland" & Status == "Employment" & Type == "Rate" & Sex == "Female" & Statistic == "Estimate",]$Value < Key_Stats[Area == "United Kingdom" & Status == "Employment" & Type == "Rate" & Sex == "Female" & Statistic == "Estimate",]$Value){"lower"} else {"the same"}` than the UK (`r Key_Stats[Area == "Scotland" & Status == "Employment" & Type == "Rate" & Sex == "Female" & Statistic == "Estimate",]$Value`% v `r Key_Stats[Area == "United Kingdom" & Status == "Employment" & Type == "Rate" & Sex == "Female" & Statistic == "Estimate",]$Value`%), women’s unemployment rate is
+`r if(Key_Stats[Area == "Scotland" & Status == "Unemployment" & Type == "Rate" & Sex == "Female" & Statistic == "Estimate",]$Value > Key_Stats[Area == "United Kingdom" & Status == "Unemployment" & Type == "Rate" & Sex == "Female" & Statistic == "Estimate",]$Value){"higher"}else if(Key_Stats[Area == "Scotland" & Status == "Unemployment" & Type == "Rate" & Sex == "Female" & Statistic == "Estimate",]$Value < Key_Stats[Area == "United Kingdom" & Status == "Unemployment" & Type == "Rate" & Sex == "Female" & Statistic == "Estimate",]$Value){"lower"} else {"the same"}` than the UK (`r Key_Stats[Area == "Scotland" & Status == "Unemployment" & Type == "Rate" & Sex == "Female" & Statistic == "Estimate",]$Value`% v `r Key_Stats[Area == "United Kingdom" & Status == "Unemployment" & Type == "Rate" & Sex == "Female" & Statistic == "Estimate",]$Value`%) and women’s inactivity rate is `r if(Key_Stats[Area == "Scotland" & Status == "Inactivity" & Type == "Rate" & Sex == "Female" & Statistic == "Estimate",]$Value > Key_Stats[Area == "United Kingdom" & Status == "Inactivity" & Type == "Rate" & Sex == "Female" & Statistic == "Estimate",]$Value){"higher"}else if(Key_Stats[Area == "Scotland" & Status == "Inactivity" & Type == "Rate" & Sex == "Female" & Statistic == "Estimate",]$Value < Key_Stats[Area == "United Kingdom" & Status == "Inactivity" & Type == "Rate" & Sex == "Female" & Statistic == "Estimate",]$Value){"lower"} else {"the same"}` than the UK (`r Key_Stats[Area == "Scotland" & Status == "Inactivity" & Type == "Rate" & Sex == "Female" & Statistic == "Estimate",]$Value`% v `r Key_Stats[Area == "United Kingdom" & Status == "Inactivity" & Type == "Rate" & Sex == "Female" & Statistic == "Estimate",]$Value`%).
+
+<div class = "row">
+<div class = "column2a">
+```{r, echo = F}
+X <- data.table(dcast(Key_Stats[Sex == "Female"], Status+Area~Type+Statistic, value.var = "Value"))
+
+X[,Level_Estimate := Commaed(Level_Estimate/1000)]
+X[,Level_Quarter := Commaed(Level_Quarter/1000)]
+X[,Level_Year := Commaed(Level_Year/1000)]
+
+BE <- data.table(Status = "", Area = "Employment",
+                 Rate_Estimate = "", Rate_Quarter = "", Rate_Year = "",
+                  Level_Estimate = "", Level_Quarter = "", Level_Year = "")
+BU <- data.table(Status = "", Area = "Unemployment",
+                 Rate_Estimate = "", Rate_Quarter = "", Rate_Year = "",
+                  Level_Estimate = "", Level_Quarter = "", Level_Year = "")
+BI <- data.table(Status = "", Area = "Inactivity",
+                 Rate_Estimate = "", Rate_Quarter = "", Rate_Year = "",
+                  Level_Estimate = "", Level_Quarter = "", Level_Year = "")
+
+X <- rbind(BE, X[Status == "Employment",], BU, X[Status == "Unemployment",], BI, X[Status == "Inactivity",])
+X <- X[, Status := NULL]
+
+Y <- flextable(X,
+               col_keys = c("Area",
+                            "Rate_Estimate", "Rate_Quarter", "Rate_Year", "Col2",
+                            "Level_Estimate", "Level_Quarter", "Level_Year"))
+
+Y <- autofit(Y)
+Y <- colformat_num(Y, j = c("Rate_Estimate", "Rate_Quarter", "Rate_Year"), digits = 1)
+Y <- colformat_num(Y,
+                   j = c("Level_Estimate", "Level_Quarter", "Level_Year"),
+                   big.mark = ",",
+                   digits = 0)
+Y <- empty_blanks(Y)
+Y <- set_header_labels(Y,
+                       Area = "", 
+                       Rate_Estimate = "Rate",
+                       Rate_Quarter = "Change on quarter",
+                       Rate_Year = "Change on year",
+                       Level_Estimate = "Level",
+                       Level_Quarter = "Change on quarter",
+                       Level_Year = "Change on year")
+
+Y <- add_header_row(Y, top = T,
+                    values = c("", "Percentage Point", "", "Level (thousands)"),
+                    colwidths = c(1, 3, 1, 3))
+Y <- add_header_row(Y, top = F,
+                    values = c("", "(per cent)", Timeq, Timey, "", "(thousands)", Timeq, Timey),
+                    colwidths = c(1, 1, 1, 1, 1, 1, 1, 1))
+
+
+Y <- hline_top(Y, j = c(1, 2:4, 6:8), border = fp_border(color = "#81358D", width = 2), part = "all")
+Y <- hline(Y, i = 1, j = c(1, 2:4, 6:8), border = fp_border(color = "#81358D", width = 2), part = "header")
+Y <- hline(Y, i = 2, border = fp_border(color = "#FFFFFF", width = 0), part = "header")
+Y <- hline(Y, border = fp_border(color = "#FFFFFF", width = 0), part = "body")
+Y <- hline_bottom(Y, j = c(1, 2:4, 6:8), border = fp_border(color = "#81358D", width = 2), part = "all")
+
+Y <- bg(Y,
+        ~ Area %in% c("Employment", "Unemployment", "Inactivity", "Scotland"),
+        j = c(1, 2:4, 6:8),
+        bg = "#EBE6E6",
+        part = "body")
+Y <- bold(Y, part = "header")
+Y <- bold(Y, ~ Area %in% c("Employment", "Unemployment", "Inactivity"))
+Y <- align(Y, i = 1, align = "center", part = "header")
+Y <- align(Y, i = 3, align = "right", part = "header")
+Y <- align(Y, j = "Area", align = "left", part = "all")
+
+Y <- compose(Y, i = 1, j = 1, part = "body",
+             value = as_paragraph("Employment",
+                                  as_chunk("1", props = fp_text(vertical.align = "superscript"))))
+Y <- compose(Y, i = 4, j = 1, part = "body",
+             value = as_paragraph("Unemployment",
+                                  as_chunk("2", props = fp_text(vertical.align = "superscript"))))
+Y <- compose(Y, i = 7, j = 1, part = "body",
+             value = as_paragraph("Inactivity",
+                                  as_chunk("3", props = fp_text(vertical.align = "superscript"))))
+
+Y
+```
+</div>
+
+<div class = "column2b">
+<font size = "1">
+**Source:** Labour Force Survey, seasonally adjusted
+
+Rates and change over time based on unrounded data.
+
+Level:  
+1,2: All persons aged 16+;  
+3.:All persons aged 16-64.
+
+Denominator:  
+1,3: all persons 16-64 years;  
+2: economically active 16+.
+</font>
+</div>
+</div>
+
+##### **Men (`r TimeN`)**
+Scotland’s men’s employment rate is `r if(Key_Stats[Area == "Scotland" & Status == "Employment" & Type == "Rate" & Sex == "Male" & Statistic == "Estimate",]$Value > Key_Stats[Area == "United Kingdom" & Status == "Employment" & Type == "Rate" & Sex == "Male" & Statistic == "Estimate",]$Value){"higher"}else if(Key_Stats[Area == "Scotland" & Status == "Employment" & Type == "Rate" & Sex == "Male" & Statistic == "Estimate",]$Value < Key_Stats[Area == "United Kingdom" & Status == "Employment" & Type == "Rate" & Sex == "Male" & Statistic == "Estimate",]$Value){"lower"} else {"the same"}` than the UK (`r Key_Stats[Area == "Scotland" & Status == "Employment" & Type == "Rate" & Sex == "Male" & Statistic == "Estimate",]$Value`% v `r Key_Stats[Area == "United Kingdom" & Status == "Employment" & Type == "Rate" & Sex == "Male" & Statistic == "Estimate",]$Value`%), men’s unemployment rate is `r if(Key_Stats[Area == "Scotland" & Status == "Unemployment" & Type == "Rate" & Sex == "Male" & Statistic == "Estimate",]$Value > Key_Stats[Area == "United Kingdom" & Status == "Unemployment" & Type == "Rate" & Sex == "Male" & Statistic == "Estimate",]$Value){"higher"}else if(Key_Stats[Area == "Scotland" & Status == "Unemployment" & Type == "Rate" & Sex == "Male" & Statistic == "Estimate",]$Value < Key_Stats[Area == "United Kingdom" & Status == "Unemployment" & Type == "Rate" & Sex == "Male" & Statistic == "Estimate",]$Value){"lower"} else {"the same"}` than the UK (`r Key_Stats[Area == "Scotland" & Status == "Unemployment" & Type == "Rate" & Sex == "Male" & Statistic == "Estimate",]$Value`% v `r Key_Stats[Area == "United Kingdom" & Status == "Unemployment" & Type == "Rate" & Sex == "Male" & Statistic == "Estimate",]$Value`%) and men’s inactivity rate is `r if(Key_Stats[Area == "Scotland" & Status == "Inactivity" & Type == "Rate" & Sex == "Male" & Statistic == "Estimate",]$Value > Key_Stats[Area == "United Kingdom" & Status == "Inactivity" & Type == "Rate" & Sex == "Male" & Statistic == "Estimate",]$Value){"higher"}else if(Key_Stats[Area == "Scotland" & Status == "Inactivity" & Type == "Rate" & Sex == "Male" & Statistic == "Estimate",]$Value < Key_Stats[Area == "United Kingdom" & Status == "Inactivity" & Type == "Rate" & Sex == "Male" & Statistic == "Estimate",]$Value){"lower"} else {"the same"}` than the UK (`r Key_Stats[Area == "Scotland" & Status == "Inactivity" & Type == "Rate" & Sex == "Male" & Statistic == "Estimate",]$Value`% v `r Key_Stats[Area == "United Kingdom" & Status == "Inactivity" & Type == "Rate" & Sex == "Male" & Statistic == "Estimate",]$Value`%).
+
+<div class = "row">
+<div class = "column2a">
+```{r, echo = F}
+X <- data.table(dcast(Key_Stats[Sex == "Male"], Status+Area~Type+Statistic, value.var = "Value"))
+
+X[,Level_Estimate := Commaed(Level_Estimate/1000)]
+X[,Level_Quarter := Commaed(Level_Quarter/1000)]
+X[,Level_Year := Commaed(Level_Year/1000)]
+
+BE <- data.table(Status = "", Area = "Employment",
+                 Rate_Estimate = "", Rate_Quarter = "", Rate_Year = "",
+                  Level_Estimate = "", Level_Quarter = "", Level_Year = "")
+BU <- data.table(Status = "", Area = "Unemployment",
+                 Rate_Estimate = "", Rate_Quarter = "", Rate_Year = "",
+                  Level_Estimate = "", Level_Quarter = "", Level_Year = "")
+BI <- data.table(Status = "", Area = "Inactivity",
+                 Rate_Estimate = "", Rate_Quarter = "", Rate_Year = "",
+                  Level_Estimate = "", Level_Quarter = "", Level_Year = "")
+
+X <- rbind(BE, X[Status == "Employment",], BU, X[Status == "Unemployment",], BI, X[Status == "Inactivity",])
+X <- X[, Status := NULL]
+
+Y <- flextable(X,
+               col_keys = c("Area",
+                            "Rate_Estimate", "Rate_Quarter", "Rate_Year", "Col2",
+                            "Level_Estimate", "Level_Quarter", "Level_Year"))
+
+Y <- autofit(Y)
+Y <- colformat_num(Y, j = c("Rate_Estimate", "Rate_Quarter", "Rate_Year"), digits = 1)
+Y <- colformat_num(Y,
+                   j = c("Level_Estimate", "Level_Quarter", "Level_Year"),
+                   big.mark = ",",
+                   digits = 0)
+Y <- empty_blanks(Y)
+Y <- set_header_labels(Y,
+                       Area = "", 
+                       Rate_Estimate = "Rate",
+                       Rate_Quarter = "Change on quarter",
+                       Rate_Year = "Change on year",
+                       Level_Estimate = "Level",
+                       Level_Quarter = "Change on quarter",
+                       Level_Year = "Change on year")
+
+Y <- add_header_row(Y, top = T,
+                    values = c("", "Percentage Point", "", "Level (thousands)"),
+                    colwidths = c(1, 3, 1, 3))
+Y <- add_header_row(Y, top = F,
+                    values = c("", "(per cent)", Timeq, Timey, "", "(thousands)", Timeq, Timey),
+                    colwidths = c(1, 1, 1, 1, 1, 1, 1, 1))
+
+
+Y <- hline_top(Y, j = c(1, 2:4, 6:8), border = fp_border(color = "#81358D", width = 2), part = "all")
+Y <- hline(Y, i = 1, j = c(1, 2:4, 6:8), border = fp_border(color = "#81358D", width = 2), part = "header")
+Y <- hline(Y, i = 2, border = fp_border(color = "#FFFFFF", width = 0), part = "header")
+Y <- hline(Y, border = fp_border(color = "#FFFFFF", width = 0), part = "body")
+Y <- hline_bottom(Y, j = c(1, 2:4, 6:8), border = fp_border(color = "#81358D", width = 2), part = "all")
+
+Y <- bg(Y,
+        ~ Area %in% c("Employment", "Unemployment", "Inactivity", "Scotland"),
+        j = c(1, 2:4, 6:8),
+        bg = "#EBE6E6",
+        part = "body")
+Y <- bold(Y, part = "header")
+Y <- bold(Y, ~ Area %in% c("Employment", "Unemployment", "Inactivity"))
+Y <- align(Y, i = 1, align = "center", part = "header")
+Y <- align(Y, i = 3, align = "right", part = "header")
+Y <- align(Y, j = "Area", align = "left", part = "all")
+
+Y <- compose(Y, i = 1, j = 1, part = "body",
+             value = as_paragraph("Employment",
+                                  as_chunk("1", props = fp_text(vertical.align = "superscript"))))
+Y <- compose(Y, i = 4, j = 1, part = "body",
+             value = as_paragraph("Unemployment",
+                                  as_chunk("2", props = fp_text(vertical.align = "superscript"))))
+Y <- compose(Y, i = 7, j = 1, part = "body",
+             value = as_paragraph("Inactivity",
+                                  as_chunk("3", props = fp_text(vertical.align = "superscript"))))
+
+Y
+```
+</div>
+
+<div class = "column2b">
+<font size = "1">
+**Source:** Labour Force Survey, seasonally adjusted
+
+Rates and change over time based on unrounded data.
+
+Level:  
+1,2: All persons aged 16+;  
+3.:All persons aged 16-64.
+
+Denominator:  
+1,3: all persons 16-64 years;  
+2: economically active 16+.
+</font>
+</div>
+</div>
+
+##### **About this Page**
+This page is updated monthly and summarises employment, unemployment and economic inactivity sourced from the Labour Force Survey for Scotland and the UK.
+
+This release follows the ONS monthly releases of:
+[Regional Labour Market Statistics in the UK](https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/bulletins/regionallabourmarket/previousReleases)
+
+Further statistics relating to Scotland's Labour Market can be found on the Scottish Government website:
+[Scottish Labour Market Statistics](https://www.gov.scot/collections/labour-market-statistics/)
+
+**Sources of information**
+
+All estimates are sourced from the labour force survey.  The Labour Force Survey is a survey of households collected and published by the Office for Nationals Statistics. Information are obtained from a sample survey and are therefore subject to some error.
+
+
