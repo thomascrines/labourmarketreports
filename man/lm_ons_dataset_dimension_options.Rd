@@ -2,7 +2,7 @@
 % Please edit documentation in R/lm_ons_dataset_dimension_options.R
 \name{lm_ons_dataset_dimension_options}
 \alias{lm_ons_dataset_dimension_options}
-\title{Return list of dimensions of a dataset in the ONS API}
+\title{Return a list of options of a dimension of a dataset in the ONS API}
 \usage{
 lm_ons_dataset_dimension_options(
   base_uri,
@@ -15,29 +15,33 @@ lm_ons_dataset_dimension_options(
 \arguments{
 \item{base_uri}{\code{string}.
 The base URI to connect to.
-('datasets/' +  \code{dataset_id} + '/editions/' + \code{dataset_edition} + '/versions/' + \code{dataset_version} + '/dimensions/' + \code{dataset_dimension}, '/options'is appended in the function).}
+  ('datasets/' +  \code{dataset_id} + '/editions/' + \code{dataset_edition} + '/versions/' + \code{dataset_version} + '/dimensions/' + \code{dataset_dimension}, '/options' is appended in the function).}
 
 \item{dataset_id}{\code{string}.
-An ID of an existing dataset in the ONS API.}
+An ID of an existing dataset in the ONS API. See \link{lm_ons_datasets}.}
 
 \item{dataset_edition}{\code{string}.
-An edition ID of an existing dataset in the ONS API.}
+An edition ID of an existing dataset in the ONS API. See \link{lm_ons_dataset_editions}.}
 
 \item{dataset_version}{\code{string}.
-A version ID of an existing dataset in the ONS API.}
+A version ID of an existing dataset in the ONS API. See \link{lm_ons_dataset_versions}.}
 
 \item{dataset_dimension}{\code{string}.
-A name of an existing dimension in the specified dataset.}
+The name of an existing dimension in the specified dataset. See \link{lm_ons_dataset_dimensions}.}
 }
 \value{
 \code{string} if one option available, \code{list} if multiple.
 }
 \description{
-\code{lm_ons_dataset_dimensions} returns a list of dimensions of a dataset available from the ONS API.
+\code{lm_ons_dataset_dimension_options} returns a list of
+   \href{https://developer.ons.gov.uk/dataset/datasets-id-editions-edition-versions-version-dimensions-dimension-options/}{options} of a
+   \href{https://developer.ons.gov.uk/dataset/datasets-id-editions-edition-versions-version-dimensions/}{dimension} of a
+   \href{https://developer.ons.gov.uk/dataset/datasets-id/}{dataset} available on the
+   \href{https://developer.ons.gov.uk/}{ONS API}.
 }
 \examples{
 \dontrun{
-lm_ons_dataset_dimension_options("https://api.beta.ons.gov.uk/v1/", "labour-market", "time-series", "2", "agegroups")
+lm_ons_dataset_dimension_options(base_uri = "https://api.beta.ons.gov.uk/v1/", dataset_id = "labour-market", dataset_edition = "time-series", dataset_version = "2", dataset_dimension = "agegroups")
 }
 
 }

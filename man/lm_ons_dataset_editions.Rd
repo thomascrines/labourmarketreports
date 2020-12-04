@@ -2,7 +2,7 @@
 % Please edit documentation in R/lm_ons_dataset_editions.R
 \name{lm_ons_dataset_editions}
 \alias{lm_ons_dataset_editions}
-\title{Return list of editions of a dataset in the ONS API}
+\title{Return a list of editions of a dataset in the ONS API}
 \usage{
 lm_ons_dataset_editions(base_uri, dataset_id)
 }
@@ -11,17 +11,20 @@ lm_ons_dataset_editions(base_uri, dataset_id)
 The base URI to connect to ('datasets/' +  \code{dataset_id} + '/editions' is appended in the function).}
 
 \item{dataset_id}{\code{string}.
-An id of an existing dataset in the ONS API .}
+An ID of an existing dataset in the ONS API. See \link{lm_ons_datasets}.}
 }
 \value{
 \code{string} if one edition available, \code{list} if multiple.
 }
 \description{
-\code{lm_ons_dataset_editions} returns a list of editions of a dataset available from the ONS API.
+\code{lm_ons_dataset_editions} returns a list of
+   \href{https://developer.ons.gov.uk/dataset/datasets-id-editions-edition/}{editions} of a
+   \href{https://developer.ons.gov.uk/dataset/datasets-id/}{dataset} available on the
+   \href{https://developer.ons.gov.uk/}{ONS API}.
 }
 \examples{
 \dontrun{
-lm_ons_dataset_editions("https://api.beta.ons.gov.uk/v1/", "labour-market")
+lm_ons_dataset_editions(base_uri = "https://api.beta.ons.gov.uk/v1/", dataset_id = "labour-market")
 }
 
 }

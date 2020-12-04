@@ -2,7 +2,7 @@
 % Please edit documentation in R/lm_ons_datasets.R
 \name{lm_ons_datasets}
 \alias{lm_ons_datasets}
-\title{Return list of datasets available from ONS API}
+\title{Return a list of all datasets available from the ONS API}
 \usage{
 lm_ons_datasets(base_uri, variables = NULL)
 }
@@ -11,17 +11,20 @@ lm_ons_datasets(base_uri, variables = NULL)
 The base URI to connect to ('datasets' is appended in the function).}
 
 \item{variables}{\code{list}.
-Default = \code{null}.A list of desired variables to return.}
+Default = \code{null}. A list of desired variables to return. If \code{null}, all variables are returned.}
 }
 \value{
 \code{list}.
 }
 \description{
-\code{lm_ons_datasets} sends a GET request to a provided URI and formats the JSON response as an R list.
+\code{lm_ons_datasets} returns a list of all
+   \href{https://developer.ons.gov.uk/dataset/datasets-id/}{datasets} available on the
+   \href{https://developer.ons.gov.uk/}{ONS API}.
 }
 \examples{
 \dontrun{
-lm_ons_datasets("https://api.beta.ons.gov.uk/v1/", c("id", "description", "title"))
+lm_ons_datasets(base_uri = "https://api.beta.ons.gov.uk/v1/")
+lm_ons_datasets(base_uri = "https://api.beta.ons.gov.uk/v1/", variables = c("id", "description", "title"))
 }
 
 }

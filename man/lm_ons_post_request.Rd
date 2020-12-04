@@ -2,48 +2,51 @@
 % Please edit documentation in R/lm_ons_post_request.R
 \name{lm_ons_post_request}
 \alias{lm_ons_post_request}
-\title{Make POST request to ONS api and return dataset from CSV}
+\title{Make a POST request to the ONS API and return a filter output ID}
 \usage{
 lm_ons_post_request(
   base_uri,
-  id,
-  edition,
-  version,
-  dimension = NULL,
-  option = NULL
+  dataset_id,
+  dataset_edition,
+  dataset_version,
+  dataset_dimension = NULL,
+  dataset_dimension_option = NULL
 )
 }
 \arguments{
 \item{base_uri}{\code{string}.
-The base URI used to determine the URIs to make GET and POST requests to.}
+The base URI to connect to. ('filters?submitted=true' is appended in the function).}
 
-\item{id}{\code{string}.
-The ID of a datasetin the ONS API.}
+\item{dataset_id}{\code{string}.
+An ID of an existing dataset in the ONS API. See \link{lm_ons_datasets}.}
 
-\item{edition}{\code{string}.
-The edition of the dataset in the ONS API.}
+\item{dataset_edition}{\code{string}.
+An edition ID of an existing dataset in the ONS API. See \link{lm_ons_dataset_editions}.}
 
-\item{version}{\code{double}.
-The version of the dataset in the ONS API.}
+\item{dataset_version}{\code{string}.
+A version ID of an existing dataset in the ONS API. See \link{lm_ons_dataset_versions}.}
 
-\item{dimension}{\code{string}.
-(Default: \code{NULL}). The name of a dimension to filter on.}
+\item{dataset_dimension}{\code{string}.
+The name of an existing dimension in the specified dataset. See \link{lm_ons_dataset_dimensions}.}
 
-\item{option}{\code{string}.
-(Default: \code{NULL}). The option to use to filter by dimension.}
+\item{dataset_dimension_option}{\code{string}.
+(Default: \code{NULL}). The option to use to filter by dimension. See \link{lm_ons_dataset_dimension_options}.}
 }
 \value{
-\code{list}.
+\code{string}.
 }
 \description{
-\code{lm_format_get_request} creates a request body based on the \href{https://developer.ons.gov.uk/}{ONS API} structure
-and sends it as a POST request to a provided URI.
-The returned ID is then used to determine the URI where a CSV download has been created and a get request is sent,
-with the resulting CSV being read into an R dataframe.
+\code{lm_format_get_request} creates a POST request body based on the
+   \href{https://developer.ons.gov.uk/}{ONS API}
+   \href{https://developer.ons.gov.uk/filter/filters/}{filter} structure
+   and sends the request a provided URI. A
+   \href{https://developer.ons.gov.uk/filter/filter-outputs-filter_output_id/}{filter output ID} is returned, which can be passed
+   \link{lm_ons_download_uri}.
 }
 \examples{
 \dontrun{
-lm_ons_post_request(base_uri = "https://api.beta.ons.gov.uk/v1/", id = "labour-market", edition = "time-series", version = 18, dimension = NULL, option = NULL)
+lm_ons_post_request(base_uri = "https://api.beta.ons.gov.uk/v1/", dataset_id = "labour-market", dataset_edition = "time-series", dataset_version = "2")
+lm_ons_post_request(base_uri = "https://api.beta.ons.gov.uk/v1/", dataset_id = "labour-market", dataset_edition = "time-series", dataset_version = "2", dataset_dimension = "agegroups", dataset_dimension_option = "16-17")
 }
 
 }

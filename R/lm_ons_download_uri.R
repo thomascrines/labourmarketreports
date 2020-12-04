@@ -1,11 +1,13 @@
 #' Get the URI of a downloadable CSV file created in the ONS API
 #'
-#' \code{lm_ons_download_uri} returns the URI of a downloadable CSV file based on a filter output ID created by \code{lm_ons_post_request}.
+#' \code{lm_ons_download_uri} returns the URI of a downloadable CSV file based on a
+#'    \href{https://developer.ons.gov.uk/filter/}{filter} output ID created by
+#'    \code{lm_ons_post_request}.
 #'
 #' @param base_uri \code{string}.
 #' The base URI of the API.
 #' @param filter_output_id \code{string}.
-#' A filter output ID, created by \code{lm_ons_post_request}.
+#' A filter output ID. See \link{lm_ons_post_request}.
 #'
 #' @return \code{list}.
 #'
