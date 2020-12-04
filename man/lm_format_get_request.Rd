@@ -2,7 +2,7 @@
 % Please edit documentation in R/lm_format_get_request.R
 \name{lm_format_get_request}
 \alias{lm_format_get_request}
-\title{Make GET request to API and format response as R list}
+\title{Make a GET request to a web API and format the response as an R list}
 \usage{
 lm_format_get_request(uri)
 }

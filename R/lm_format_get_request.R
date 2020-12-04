@@ -1,4 +1,4 @@
-#' Make GET request to API and format response as R list
+#' Make a GET request to a web API and format the response as an R list
 #'
 #' \code{lm_format_get_request} sends a GET request to a provided URI and formats the JSON response as an R list.
 #'
