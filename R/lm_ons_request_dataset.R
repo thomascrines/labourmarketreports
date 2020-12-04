@@ -1,6 +1,6 @@
 #' Make a POST request to the ONS API and return a filter output ID
 #'
-#' \code{lm_format_get_request} creates a POST request body based on the
+#' \code{lm_ons_request_dataset} creates a POST request body based on the
 #'    \href{https://developer.ons.gov.uk/}{ONS API}
 #'    \href{https://developer.ons.gov.uk/filter/filters/}{filter} structure
 #'    and sends the request a provided URI. A
@@ -24,13 +24,13 @@
 #'
 #' @examples
 #' \dontrun{
-#' lm_ons_post_request(base_uri = "https://api.beta.ons.gov.uk/v1/", dataset_id = "labour-market", dataset_edition = "time-series", dataset_version = "2")
-#' lm_ons_post_request(base_uri = "https://api.beta.ons.gov.uk/v1/", dataset_id = "labour-market", dataset_edition = "time-series", dataset_version = "2", dataset_dimension = "agegroups", dataset_dimension_option = "16-17")
+#' lm_ons_request_dataset(base_uri = "https://api.beta.ons.gov.uk/v1/", dataset_id = "labour-market", dataset_edition = "time-series", dataset_version = "2")
+#' lm_ons_request_dataset(base_uri = "https://api.beta.ons.gov.uk/v1/", dataset_id = "labour-market", dataset_edition = "time-series", dataset_version = "2", dataset_dimension = "agegroups", dataset_dimension_option = "16-17")
 #' }
 #'
 #' @export
 
-lm_ons_post_request <- function(base_uri, dataset_id, dataset_edition, dataset_version, dataset_dimension = NULL, dataset_dimension_option = NULL) {
+lm_ons_request_dataset <- function(base_uri, dataset_id, dataset_edition, dataset_version, dataset_dimension = NULL, dataset_dimension_option = NULL) {
   post_request_uri <- paste0(base_uri, 'filters?submitted=true')
 
   post_request_body <- paste0('{"dataset": {"id": "', dataset_id,
