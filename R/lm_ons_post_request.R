@@ -28,7 +28,6 @@
 #' @export
 
 lm_ons_post_request <- function(base_uri, id, edition, version, dimension = NULL, option = NULL) {
-
   post_request_uri <- paste0(base_uri, 'filters?submitted=true')
 
   post_request_body <- paste0('{"dataset": {"id": "', id,
@@ -38,15 +37,10 @@ lm_ons_post_request <- function(base_uri, id, edition, version, dimension = NULL
 
   if (is.null(dimension)) {
     post_request_body <- paste0(post_request_body, ']}')
-
-    } else {
-
+  } else {
     post_request_body <- paste0(post_request_body, '{"name": "', dimension, '", "options": ["', option, '"]}]}')
   }
 
   post_request_response <- httr::POST(url <- post_request_uri, body = post_request_body)
-  filter_output_id <- httr::content(post_request_response)$links$filter_output$id
-  get_request_response <- httr::GET(paste0(base_uri, 'filter-outputs/', filter_output_id))
-  download_uri <- httr::content(get_request_response)$downloads$csv$href
-  read.csv(download_uri)
+  httr::content(post_request_response)$links$filter_output$id
 }
