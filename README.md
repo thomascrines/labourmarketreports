@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# shsannualreport
+# labourmarketreports
 
 <!-- badges: start -->
 
@@ -19,7 +19,7 @@ data from a number of web APIs:
 
 ## Installation
 
-You can install the development version of shsannualreport from
+You can install the development version of labourmarketreports from
 [GitHub](https://github.com/) with:
 
 ``` r
@@ -30,7 +30,7 @@ devtools::install_github("thomascrines/labourmarketreports")
 If you are working on SCOTS, or if the above does not work, you can
 install manually:
 
-1.  Go to the shsannualreport repository [master
+1.  Go to the labourmarketreports repository [master
     branch](https://github.com/thomascrines/labourmarketreports) on
     GitHub
 2.  Click **Clone or download** then **Download ZIP**
