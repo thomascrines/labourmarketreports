@@ -13,7 +13,7 @@ public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostat
 labourmarketreports is an R package to produce markdown reports with
 data from a number of web APIs:
 
-  - [https://developer.ons.gov.uk/](ONS)
+  - [ONS](https://developer.ons.gov.uk/)
   - [https://www.nomisweb.co.uk/api/v01/help](NOMIS)
   - [https://statistics.gov.scot/home](statistics.gov.scot)
 
