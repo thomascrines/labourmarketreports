@@ -14,8 +14,8 @@ labourmarketreports is an R package to produce markdown reports with
 data from a number of web APIs:
 
   - [ONS](https://developer.ons.gov.uk/)
-  - [https://www.nomisweb.co.uk/api/v01/help](NOMIS)
-  - [https://statistics.gov.scot/home](statistics.gov.scot)
+  - [NOMIS](https://www.nomisweb.co.uk/api/v01/help)
+  - [statistics.gov.scot](https://statistics.gov.scot/home)
 
 ## Installation
 
@@ -51,7 +51,7 @@ install.packages("C:/DownloadDirectory/labourmarketreports-master/labourmarketre
 
 The main functionality that has been developed so far is to interact
 with the ONS API, so it’s useful to read through the
-[https://developer.ons.gov.uk/](documentation) before starting to use
+[documentation](https://developer.ons.gov.uk/) before starting to use
 the package. The main functions are:
 
   - `lm_ons_request_dataset` - Requests a downloadable dataset be
@@ -103,7 +103,7 @@ The above examples only work as the arguments passed in are already
 known. The package contains a number of helper functions to get the
 necessary options from the API. (The base URI used above is not taken
 directly from the API, but from the
-[https://developer.ons.gov.uk/](documentation).)
+[documentation](https://developer.ons.gov.uk/).)
 
 The three required arguments (`dataset_id`, `dataset_edition`, and
 `dataset_version`) can be obtained with the functions `lm_ons_datasets`,
