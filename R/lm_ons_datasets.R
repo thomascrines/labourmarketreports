@@ -22,9 +22,9 @@
 lm_ons_datasets <- function(base_uri, variables = NULL) {
   datasets_uri <- paste0(base_uri, 'datasets')
   datasets <- lm_format_get_request(datasets_uri)
-  if (!is.null(variables)) {
-    datasets$items[, variables]
-  }  else {
+  if (is.null(variables)) {
     datasets$items
+  }  else {
+    datasets$items[, variables]
   }
 }
