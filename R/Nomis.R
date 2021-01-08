@@ -1,3 +1,5 @@
+#TODO add nomis instructions/examples to readme
+
 # library(magrittr)
 # # library(httr)
 # # library(jsonlite)

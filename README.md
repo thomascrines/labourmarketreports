@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# labourmarketreports
+# shsannualreport
 
 <!-- badges: start -->
 
@@ -13,13 +13,13 @@ public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostat
 labourmarketreports is an R package to produce markdown reports with
 data from a number of web APIs:
 
-  - [ONS](https://developer.ons.gov.uk/)
-  - [NOMIS](https://www.nomisweb.co.uk/api/v01/help)
-  - [statistics.gov.scot](https://statistics.gov.scot/home)
+  - [https://developer.ons.gov.uk/](ONS)
+  - [https://www.nomisweb.co.uk/api/v01/help](NOMIS)
+  - [https://statistics.gov.scot/home](statistics.gov.scot)
 
 ## Installation
 
-You can install the development version of labourmarketreports from
+You can install the development version of shsannualreport from
 [GitHub](https://github.com/) with:
 
 ``` r
@@ -30,7 +30,7 @@ devtools::install_github("thomascrines/labourmarketreports")
 If you are working on SCOTS, or if the above does not work, you can
 install manually:
 
-1.  Go to the labourmarketreports repository [master
+1.  Go to the shsannualreport repository [master
     branch](https://github.com/thomascrines/labourmarketreports) on
     GitHub
 2.  Click **Clone or download** then **Download ZIP**
@@ -51,7 +51,7 @@ install.packages("C:/DownloadDirectory/labourmarketreports-master/labourmarketre
 
 The main functionality that has been developed so far is to interact
 with the ONS API, so it’s useful to read through the
-[documentation](https://developer.ons.gov.uk/) before starting to use
+[https://developer.ons.gov.uk/](documentation) before starting to use
 the package. The main functions are:
 
   - `lm_ons_request_dataset` - Requests a downloadable dataset be
@@ -103,7 +103,7 @@ The above examples only work as the arguments passed in are already
 known. The package contains a number of helper functions to get the
 necessary options from the API. (The base URI used above is not taken
 directly from the API, but from the
-[documentation](https://developer.ons.gov.uk/).)
+[https://developer.ons.gov.uk/](documentation).)
 
 The three required arguments (`dataset_id`, `dataset_edition`, and
 `dataset_version`) can be obtained with the functions `lm_ons_datasets`,
