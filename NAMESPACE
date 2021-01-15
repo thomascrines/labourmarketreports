@@ -2,6 +2,7 @@
 
 export(lm_data_country_stats)
 export(lm_data_key_stats)
+export(lm_data_ons_example)
 export(lm_data_region_stats)
 export(lm_data_time_stats)
 export(lm_format_get_request)
