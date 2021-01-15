@@ -14,10 +14,10 @@
 lm_data_nomis_example <- function() {
 
   base_uri <- "http://www.nomisweb.co.uk/"
-
+  dataset_id <- "NM_1_1"
   row_limit = 10000
 
-  dataset <- lm_nomis_download_dataset(base_uri, "NM_1_1", filter_string = NULL, row_limit = row_limit)
+  dataset <- lm_nomis_download_dataset(base_uri, dataset_id, filter_string = filter_string, row_limit = row_limit)
 
   dataset <- dataset[, c("DATE_NAME", "GEOGRAPHY_NAME", "ITEM_NAME", "MEASURES_NAME", "OBS_VALUE")]
 
