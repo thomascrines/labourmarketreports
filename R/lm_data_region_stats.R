@@ -14,5 +14,6 @@
 lm_data_region_stats <- function() {
 
   # TODO get data from API using functions
-  data.table::data.table(readxl::read_excel("Data\\Tables_Online.xlsx", sheet = "Regions"))
+
+  labourmarketreports::region_stats_example_data
 }
