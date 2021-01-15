@@ -17,6 +17,26 @@ knitr::opts_chunk$set(
 [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 <!-- badges: end -->
 
+:construction: :construction: :construction: 
+
+Temporary files included in package can be deleted later:
+
+* lm_data_country_stats.R
+* lm_data_key_stats.R
+* lm_data_nomis_example.R
+* lm_data_ons_example.R
+* lm_data_region_stats.R
+* lm_data_time_stats.R
+* Nomis.R
+
+The data and Markdown folders can also be deleted when reporting process finalised.
+
+The process of making a function to pull and format a dataset for publication should be described in this readme.
+
+NOMIS and ONS guides could be moved into separate files.
+
+:construction: :construction: :construction:
+
 labourmarketreports is an R package to produce markdown reports with data from the following web APIs:
 
 * [ONS](https://developer.ons.gov.uk/)

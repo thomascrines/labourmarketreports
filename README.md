@@ -10,6 +10,28 @@ has not yet been a stable, usable release suitable for the
 public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 <!-- badges: end -->
 
+:construction: :construction: :construction:
+
+Temporary files included in package can be deleted later:
+
+  - lm\_data\_country\_stats.R
+  - lm\_data\_key\_stats.R
+  - lm\_data\_nomis\_example.R
+  - lm\_data\_ons\_example.R
+  - lm\_data\_region\_stats.R
+  - lm\_data\_time\_stats.R
+  - Nomis.R
+
+The data and Markdown folders can also be deleted when reporting process
+finalised.
+
+The process of making a function to pull and format a dataset for
+publication should be described in this readme.
+
+NOMIS and ONS guides could be moved into separate files.
+
+:construction: :construction: :construction:
+
 labourmarketreports is an R package to produce markdown reports with
 data from the following web APIs:
 
