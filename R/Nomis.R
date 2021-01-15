@@ -1,6 +1,6 @@
-#TODO add nomis instructions/examples to readme
-
-# library(magrittr)
+# # TODO add nomis instructions/examples to readme
+# #
+# # library(magrittr)
 # # library(httr)
 # # library(jsonlite)
 #
@@ -51,5 +51,4 @@
 # filter_string = "?geography=2092957697"
 # row_limit = 5
 # dataset <- lm_nomis_download_dataset(base_uri, "NM_1_1", filter_string = NULL, row_limit = row_limit)
-#
 #
