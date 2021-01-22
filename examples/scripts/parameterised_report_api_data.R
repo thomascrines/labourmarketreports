@@ -1,9 +1,7 @@
-# Use this script to generate a report based on a template
 library(labourmarketreports)
-
 output_folder <- "C:/temp/reports"
-output_filename <- "test_from_api"
-report_template_path <- "report_templates/parameterised_report_example_api_data.Rmd"
+output_filename <- "parameterised_report_api_data"
+report_template_path <- "examples/report_templates/parameterised_report_api_data.Rmd"
 report_format <- "html_document"
 
 params <- list(ons_data = labourmarketreports::lm_data_ons_example(),
