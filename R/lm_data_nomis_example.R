@@ -16,6 +16,7 @@ lm_data_nomis_example <- function() {
   base_uri <- "http://www.nomisweb.co.uk/"
   dataset_id <- "NM_1_1"
   row_limit = 10000
+  filter_string = NULL
 
   dataset <- lm_nomis_download_dataset(base_uri, dataset_id, filter_string = filter_string, row_limit = row_limit)
 

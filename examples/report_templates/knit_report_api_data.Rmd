@@ -1,0 +1,65 @@
+---
+output:
+  html_document: default
+---
+
+```{css, echo=FALSE}
+* {
+  font-family: Arial !important;
+}
+
+.column2 {
+  float: left;
+  width: 50%;
+}
+
+.column3 {
+  float: left;
+  width: 33.33%;
+}
+
+.column2a {
+  float: left;
+  width: 80%;
+}
+
+.column2b {
+  float: left;
+  width: 20%;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.titledate {
+  background-color:#81358D;
+  color:#FFFFFF;
+}
+
+.titledate:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+```
+
+```{r, include = F}
+library(labourmarketreports)
+library(data.table)   # Uses the functions data.table & dcast
+
+ons_data <- data.table(labourmarketreports::lm_data_ons_example())
+nomis_data <- data.table(labourmarketreports::lm_data_nomis_example())
+```
+
+#### ONS data from API, passed as param
+```{r, echo = F}
+ons_data
+```
+
+#### NOMIS data from API, passed as para
+```{r, echo = F}
+nomis_data
+```

@@ -1,8 +1,6 @@
 ---
 output:
   html_document: default
-params:
-   input_date: ""
 ---
 
 ```{css, echo=FALSE}
@@ -58,7 +56,7 @@ library(lubridate)    # Uses the functions month & year
 library(officer)      # Uses function fp_border
 library(ggplot2)      # Uses the function ggplot
 
-Date <- as.Date(params$input_date, format = "%d/%m/%Y")
+Date <- as.Date("01/10/2020")
 Key_Stats <- data.table(labourmarketreports::lm_data_key_stats())
 Country_Stats <- data.table(labourmarketreports::lm_data_country_stats())
 Region_Stats <- data.table(labourmarketreports::lm_data_region_stats())
