@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# labourmarketreports
+# shsannualreport
 
 <!-- badges: start -->
 
@@ -10,16 +10,38 @@ has not yet been a stable, usable release suitable for the
 public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 <!-- badges: end -->
 
+:construction: :construction: :construction:
+
+Package is in development and includes functions, data files, and
+scripts for testing. When functionality is finalised, the following
+functions can be deleted from the R folder:
+
+  - lm\_data\_country\_stats.R
+  - lm\_data\_key\_stats.R
+  - lm\_data\_nomis\_example.R
+  - lm\_data\_ons\_example.R
+  - lm\_data\_region\_stats.R
+  - lm\_data\_time\_stats.R
+
+The examples folder can also be deleted when other functions are
+finalised.
+
+TODO The process of making a function to pull and format a dataset for
+publication should be described in this readme.
+
+NOMIS and ONS guides could be moved into separate files.
+
+:construction: :construction: :construction:
+
 labourmarketreports is an R package to produce markdown reports with
-data from a number of web APIs:
+data from the following web APIs:
 
   - [ONS](https://developer.ons.gov.uk/)
   - [NOMIS](https://www.nomisweb.co.uk/api/v01/help)
-  - [statistics.gov.scot](https://statistics.gov.scot/home)
 
 ## Installation
 
-You can install the development version of labourmarketreports from
+You can install the development version of shsannualreport from
 [GitHub](https://github.com/) with:
 
 ``` r
@@ -30,7 +52,7 @@ devtools::install_github("thomascrines/labourmarketreports")
 If you are working on SCOTS, or if the above does not work, you can
 install manually:
 
-1.  Go to the labourmarketreports repository [master
+1.  Go to the shsannualreport repository [master
     branch](https://github.com/thomascrines/labourmarketreports) on
     GitHub
 2.  Click **Clone or download** then **Download ZIP**
@@ -47,10 +69,9 @@ install.packages("C:/DownloadDirectory/labourmarketreports-master/labourmarketre
 
 *Library path can be seen by running `.libPaths()`*
 
-## Usage
+## Usage - ONS API
 
-The main functionality that has been developed so far is to interact
-with the ONS API, so it’s useful to read through the
+If using the ONS API, so it’s useful to read through the
 [documentation](https://developer.ons.gov.uk/) before starting to use
 the package. The main functions are:
 
@@ -225,3 +246,108 @@ filter_output_id <- lm_ons_request_dataset(base_uri = base_uri,
 filtered_dataset <- lm_ons_download_dataset(base_uri = base_uri,
                                             filter_output_id = filter_output_id)
 ```
+
+## Usage - NOMIS API
+
+Again, it’s useful to read through the [NOMIS
+documentation](https://www.nomisweb.co.uk/api/v01/help) before starting
+to use the package. The main function is:
+
+  - `lm_nomis_download_dataset` - Downloads a dataset from the NOMIS
+    API, based on a `base_uri`, and a `dataset_id`. Also accepts and
+    optional `filter_string` and `row_limit`.
+
+### Examples
+
+To return an entire dataset from the NOMIS API, without filtering:
+
+``` r
+  base_uri <- "http://www.nomisweb.co.uk/"
+  dataset_id <- "NM_1_1"
+
+  lm_nomis_download_dataset(base_uri, dataset_id)
+```
+
+To return 1000 rows of a filtered dataset from the NOMIS API (in this
+case to only return the option “2092957697” for the dimension
+“geography”):
+
+``` r
+  base_uri <- "http://www.nomisweb.co.uk/"
+  dataset_id <- "NM_1_1"
+  filter_string = "?geography=2092957697"
+  row_limit = 10000
+  
+  dataset <- lm_nomis_download_dataset(base_uri, dataset_id, filter_string = filter_string, row_limit = row_limit)
+```
+
+### Helper functions
+
+As with the ONS examples, these examples only work if the arguments are
+already known. The package contains a number of helper functions to get
+the necessary options from the API. (The base URI used above is not
+taken directly from the API, but from the [NOMIS
+documentation](https://www.nomisweb.co.uk/api/v01/help) .)
+
+The only required argument is `dataset_id`, which can be obtained with
+the function `lm_nomis_datasets`.
+
+The `filter_string`can be created with values obtained with the
+functions `lm_nomis_dataset_dimensions` and
+`lm_nomis_dataset_dimension_options`.
+
+### Helper function examples
+
+#### lm\_nomis\_datasets
+
+To get a dataset ID, use `lm_nomis_datasets`:
+
+``` r
+datasets <- lm_nomis_datasets(base_uri = "http://www.nomisweb.co.uk/")
+```
+
+Returned columns can be specified with the optional `variables`
+argument:
+
+``` r
+datasets <- lm_nomis_datasets(base_uri = "http://www.nomisweb.co.uk/", 
+                              variables = c("id", "uri", "description.value", "name.value", "components.dimension"))
+```
+
+Any value in the `id` column can be used as a `dataset_id` in the other
+functions.
+
+The returned object from `lm_nomis_datasets` is required for the
+`lm_nomis_dimensions` function.
+
+#### lm\_nomis\_dataset\_dimensions (optional, for filtering only)
+
+To get the available dimensions (or column names) of a dataset, use
+`lm_nomis_dimensions`:
+
+``` r
+datasets <- lm_nomis_datasets(base_uri = "http://www.nomisweb.co.uk/", 
+                              variables = c("id", "uri", "description.value", "name.value", "components.dimension"))
+dataset_id <- "NM_1_1"
+
+dimensions <- lm_nomis_dataset_dimensions(dataset_id = dataset_id, 
+                                          datasets_list = datasets)
+```
+
+#### lm\_nomis\_dataset\_dimension\_options (optional, for filtering only)
+
+To get the available options of a dimension, use
+`lm_nomis_dimension_options`:
+
+``` r
+options <- lm_nomis_dataset_dimension_options(base_uri = "http://www.nomisweb.co.uk/", 
+                                              dataset_id = "NM_1_1", 
+                                              dataset_dimension = "GEOGRAPHY")
+```
+
+To filter a dataset currently involves manually creating a filter string
+to pass to `lm_nomis_download_dataset`. In the example above, using
+`"geography"` as the dimension and an available option of
+`"2092957697"`, the filter string can be manually written:
+`"?geography=2092957697"`. This is a possible issue to be improved in
+future if necessary.

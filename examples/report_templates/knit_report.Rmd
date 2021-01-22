@@ -56,11 +56,11 @@ library(lubridate)    # Uses the functions month & year
 library(officer)      # Uses function fp_border
 library(ggplot2)      # Uses the function ggplot
 
-Date <- as.Date(data.table(read_excel("Tables_Online.xlsx", sheet = "Date"))$Value, format = "%d/%m/%Y")
-Key_Stats <- data.table(read_excel("Tables_Online.xlsx", sheet = "Key"))
-Country_Stats <- data.table(read_excel("Tables_Online.xlsx", sheet = "Countries"))
-Region_Stats <- data.table(read_excel("Tables_Online.xlsx", sheet = "Regions"))
-Time_Stats <- data.table(read_excel("Tables_Online.xlsx", sheet = "Time"))
+Date <- as.Date("01/10/2020")
+Key_Stats <- data.table(labourmarketreports::lm_data_key_stats())
+Country_Stats <- data.table(labourmarketreports::lm_data_country_stats())
+Region_Stats <- data.table(labourmarketreports::lm_data_region_stats())
+Time_Stats <- data.table(labourmarketreports::lm_data_time_stats())
 
 Time_Stats[,Period := as.Date(paste("01", str_sub(Period, 5, 7), str_sub(Period, -4), sep = " "), format = "%d %b %Y")]
 
