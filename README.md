@@ -12,7 +12,9 @@ public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostat
 
 :construction: :construction: :construction:
 
-Temporary files included in package can be deleted later:
+Package is in development and includes functions, data files, and
+scripts for testing. When functionality is finalised, the following
+functions can be deleted from the R folder:
 
   - lm\_data\_country\_stats.R
   - lm\_data\_key\_stats.R
@@ -20,12 +22,11 @@ Temporary files included in package can be deleted later:
   - lm\_data\_ons\_example.R
   - lm\_data\_region\_stats.R
   - lm\_data\_time\_stats.R
-  - Nomis.R
 
-The data and Markdown folders can also be deleted when reporting process
+The examples folder can also be deleted when other functions are
 finalised.
 
-The process of making a function to pull and format a dataset for
+TODO The process of making a function to pull and format a dataset for
 publication should be described in this readme.
 
 NOMIS and ONS guides could be moved into separate files.
@@ -37,7 +38,6 @@ data from the following web APIs:
 
   - [ONS](https://developer.ons.gov.uk/)
   - [NOMIS](https://www.nomisweb.co.uk/api/v01/help)
-  - [statistics.gov.scot](https://statistics.gov.scot/home)
 
 ## Installation
 
@@ -71,8 +71,7 @@ install.packages("C:/DownloadDirectory/labourmarketreports-master/labourmarketre
 
 ## Usage - ONS API
 
-The main functionality that has been developed so far is to interact
-with the ONS API, so it’s useful to read through the
+If using the ONS API, so it’s useful to read through the
 [documentation](https://developer.ons.gov.uk/) before starting to use
 the package. The main functions are:
 
@@ -352,9 +351,3 @@ to pass to `lm_nomis_download_dataset`. In the example above, using
 `"2092957697"`, the filter string can be manually written:
 `"?geography=2092957697"`. This is a possible issue to be improved in
 future if necessary.
-
-## Usage - statistics.gov.scot
-
-If data from the open data platform is required there is an existing
-package to pull data from the API,
-[opendatascot](https://github.com/DataScienceScotland/opendatascot).
