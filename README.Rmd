@@ -30,9 +30,7 @@ Package is in development and includes functions, data files, and scripts for te
 
 The examples folder can also be deleted when other functions are finalised.
 
-TODO The process of making a function to pull and format a dataset for publication should be described in this readme.
-
-NOMIS and ONS guides could be moved into separate files.
+TODO As working functions are added for tables etc, they should be documented here. The process of making a function to pull and format a dataset for publication could be explained as well.
 
 :construction: :construction: :construction:
 
